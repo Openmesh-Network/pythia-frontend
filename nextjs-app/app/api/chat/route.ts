@@ -5,7 +5,7 @@ export type ChatResponse =
   | {
       success: true;
       query: string;
-      data: string;
+      data: { [field: string]: any }[];
     }
   | {
       success: false;
@@ -81,12 +81,12 @@ export async function POST(req: NextRequest) {
     return Response.json({
       success: true,
       query: query,
-      data: JSON.stringify(data.rows),
+      data: data.rows,
     });
   } catch (e: any) {
     return Response.json({
       success: false,
-      error: e?.message ?? JSON.stringify(e),
+      error: JSON.stringify(e),
     });
   }
 }

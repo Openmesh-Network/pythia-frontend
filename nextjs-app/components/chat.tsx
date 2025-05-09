@@ -7,11 +7,17 @@ import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { useState } from "react";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 import { ChatResponse } from "@/app/api/chat/route";
+import { DataVisualizer } from "./data-visualizer";
 
 type ChatMessage =
   | {
       type: "user";
       message: string;
+    }
+  | {
+      type: "data";
+      query: string;
+      data: { [field: string]: any }[];
     }
   | {
       type: "error";
@@ -36,6 +42,30 @@ export function Chat() {
                   </div>
                 </CardHeader>
               </Card>
+            ) : m.type === "data" ? (
+              <DataVisualizer
+                key={i}
+                query={m.query}
+                data={m.data}
+                update={(updated) => {
+                  setChat((chat) =>
+                    chat.map((c) =>
+                      c === m
+                        ? updated.success
+                          ? {
+                              type: "data",
+                              query: updated.query,
+                              data: updated.data,
+                            }
+                          : {
+                              type: "error",
+                              message: updated.error,
+                            }
+                        : c
+                    )
+                  );
+                }}
+              />
             ) : m.type === "error" ? (
               <Card key={i} className="py-4 border border-foreground">
                 <CardHeader>
@@ -73,23 +103,19 @@ export function Chat() {
           })
             .then((res) => res.json() as Promise<ChatResponse>)
             .then((data) => {
-              if (data.success) {
-                setChat((chat) => [
-                  ...chat,
-                  {
-                    type: "user",
-                    message: `${data.query}: ${data.data}`,
-                  },
-                ]);
-              } else {
-                setChat((chat) => [
-                  ...chat,
-                  {
-                    type: "error",
-                    message: data.error,
-                  },
-                ]);
-              }
+              setChat((chat) => [
+                ...chat,
+                data.success
+                  ? {
+                      type: "data",
+                      query: data.query,
+                      data: data.data,
+                    }
+                  : {
+                      type: "error",
+                      message: data.error,
+                    },
+              ]);
             });
         }}
         className="flex m-2 gap-1 h-12"

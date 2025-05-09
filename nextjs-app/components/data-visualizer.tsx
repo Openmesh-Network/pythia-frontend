@@ -22,7 +22,7 @@ export function DataVisualizer({
     if (
       data.length > 1 &&
       !data.some((c) => Object.keys(c).length > 5) &&
-      !data.some((c) => Object.values(c).some((v) => typeof v !== "number")) &&
+      !data.some((c) => Object.values(c).some((v) => isNaN(Number(v)))) &&
       !data.some((c) => !Object.keys(c).includes("timestamp"))
     ) {
       return "chart";

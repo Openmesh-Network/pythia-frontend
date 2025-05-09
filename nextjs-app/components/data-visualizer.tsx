@@ -1,12 +1,12 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { useMemo, useState } from "react";
 import { DataTable } from "./visualizations/data-table";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Button } from "./ui/button";
 import { QueryResponse } from "@/app/api/query/route";
+import { LineChart } from "./visualizations/line-chart";
 
 export function DataVisualizer({
   query,
@@ -18,27 +18,31 @@ export function DataVisualizer({
   update: (updated: QueryResponse) => void;
 }) {
   const [queryShown, setQueryShown] = useState<boolean>(false);
+  const visualizationMethod: "table" | "chart" = useMemo(() => {
+    if (
+      data.length > 1 &&
+      !data.some((c) => Object.keys(c).length > 5) &&
+      !data.some((c) => Object.values(c).some((v) => typeof v !== "number")) &&
+      !data.some((c) => !Object.keys(c).includes("timestamp"))
+    ) {
+      return "chart";
+    }
 
-  const columns: ColumnDef<(typeof data)[0]>[] = useMemo(() => {
-    const keys = new Set(data.flatMap((c) => Object.keys(c)));
-    return keys
-      .values()
-      .map((c) => {
-        return {
-          accessorKey: c,
-          header: () => <span className="capitalize">{c}</span>,
-        };
-      })
-      .toArray();
+    return "table";
   }, [data]);
 
   return (
     <Card className="py-4 border border-foreground gap-2">
-      <CardContent className="flex">
-        <ScrollArea className="w-10 grow">
-          <DataTable columns={columns} data={data} />
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+      <CardContent>
+        {visualizationMethod === "table" && (
+          <div className="flex">
+            <ScrollArea className="w-10 grow">
+              <DataTable data={data} />
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+        )}
+        {visualizationMethod === "chart" && <LineChart data={data} />}
       </CardContent>
       <CardFooter>
         <div className="flex flex-col gap-2">

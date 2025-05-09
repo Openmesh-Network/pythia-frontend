@@ -15,16 +15,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useMemo } from "react";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+export function DataTable({ data }: { data: { [field: string]: any }[] }) {
+  const columns: ColumnDef<(typeof data)[0]>[] = useMemo(() => {
+    const keys = new Set(data.flatMap((c) => Object.keys(c)));
+    return keys
+      .values()
+      .map((c) => {
+        return {
+          accessorKey: c,
+          header: () => <span className="capitalize">{c}</span>,
+        };
+      })
+      .toArray();
+  }, [data]);
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,

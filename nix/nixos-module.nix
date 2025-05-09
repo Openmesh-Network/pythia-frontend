@@ -5,13 +5,13 @@
   ...
 }:
 let
-  cfg = config.services.xnode-nextjs-template;
-  xnode-nextjs-template = pkgs.callPackage ./package.nix { };
+  cfg = config.services.pythia-frontend;
+  pythia-frontend = pkgs.callPackage ./package.nix { };
 in
 {
   options = {
-    services.xnode-nextjs-template = {
-      enable = lib.mkEnableOption "Enable the nextjs app";
+    services.pythia-frontend = {
+      enable = lib.mkEnableOption "Enable the Pythia frontend app";
 
       hostname = lib.mkOption {
         type = lib.types.str;
@@ -31,6 +31,24 @@ in
         '';
       };
 
+      dbConnectionString = lib.mkOption {
+        type = lib.types.str;
+        default = "postgres://pythiafrontend:pythiafrontend@localhost:5432/pythia";
+        example = "postgres://user:password@host:5432/database";
+        description = ''
+          Database to lookup information in.
+        '';
+      };
+
+      asiApiKey = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        example = "<YOUR-API-KEY>";
+        description = ''
+          API key to use for AI calls.
+        '';
+      };
+
       openFirewall = lib.mkOption {
         type = lib.types.bool;
         default = true;
@@ -42,24 +60,26 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    users.groups.xnode-nextjs-template = { };
-    users.users.xnode-nextjs-template = {
+    users.groups.pythia-frontend = { };
+    users.users.pythia-frontend = {
       isSystemUser = true;
-      group = "xnode-nextjs-template";
+      group = "pythia-frontend";
     };
 
-    systemd.services.xnode-nextjs-template = {
+    systemd.services.pythia-frontend = {
       wantedBy = [ "multi-user.target" ];
-      description = "Nextjs App.";
+      description = "Chat-like interface to query a database in natural language and visualize the data output.";
       after = [ "network.target" ];
       environment = {
         HOSTNAME = cfg.hostname;
         PORT = toString cfg.port;
+        DB_CONNECTION_STRING = cfg.dbConnectionString;
+        ASI_API_KEY = cfg.asiApiKey;
       };
       serviceConfig = {
-        ExecStart = "${lib.getExe xnode-nextjs-template}";
-        User = "xnode-nextjs-template";
-        Group = "xnode-nextjs-template";
+        ExecStart = "${lib.getExe pythia-frontend}";
+        User = "pythia-frontend";
+        Group = "pythia-frontend";
         CacheDirectory = "nextjs-app";
       };
     };

@@ -1,14 +1,14 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    xnode-nextjs-template.url = "github:Openmesh-Network/xnode-nextjs-template";
+    pythia-frontend.url = "github:Openmesh-Network/pythia-frontend";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      xnode-nextjs-template,
+      pythia-frontend,
       ...
     }:
     let
@@ -18,19 +18,19 @@
       nixosConfigurations.container = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit xnode-nextjs-template;
+          inherit pythia-frontend;
         };
         modules = [
           (
-            { xnode-nextjs-template, ... }:
+            { pythia-frontend, ... }:
             {
               imports = [
-                xnode-nextjs-template.nixosModules.default
+                pythia-frontend.nixosModules.default
               ];
 
               boot.isContainer = true;
 
-              services.xnode-nextjs-template = {
+              services.pythia-frontend = {
                 enable = true;
               };
 

@@ -1,6 +1,7 @@
-export type SiteConfig = typeof siteConfig
+export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Xnode Nextjs Template",
-  description: "Template to make your Nextjs app Xnode/Nix compatible.",
-} as const
+  name: "Pythia",
+  description:
+    "Chat-like interface to query a database in natural language and visualize the data output.",
+} as const;

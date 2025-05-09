@@ -1,6 +1,15 @@
+import "@/app/global.css";
+
 import { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 
 import { siteConfig } from "@/config/site";
+import { Header } from "@/components/header";
+import { cn } from "@/lib/utils";
+
+const inter = localFont({
+  src: "./InterVariable.ttf",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -31,7 +40,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <>
       <html>
         <head />
-        <body>{children}</body>
+        <body
+          className={cn("h-screen antialiased flex flex-col", inter.className)}
+        >
+          <Header />
+          {children}
+        </body>
       </html>
     </>
   );

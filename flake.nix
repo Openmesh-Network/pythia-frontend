@@ -1,5 +1,5 @@
 {
-  description = "Nextjs app running on Xnode!";
+  description = "Chat-like interface to query a database in natural language and visualize the data output.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";

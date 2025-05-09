@@ -36,7 +36,7 @@ interface AIResponse {
 const schema = `
 CREATE TABLE ethereum_blocks (timestamp bigint, number bigint, hash character(66), extradata text, size bigint, gasused numeric);
 
-CREATE TABLE ethereum_transactions (timestamp bigint, hash character(66), fromaddr character(42), toaddr character(42), value numeric, gas bigint, gasprice bigint, input text);
+CREATE TABLE ethereum_transactions (timestamp bigint, hash character(66), fromaddr character(42), toaddr character(42), value numeric, gas bigint, gasprice bigint, input text, blocknumber bigint);
 
 CREATE TABLE fetch_erc20_transfers (timestamp bigint, fromaddr character(42), toaddr character(42), value numeric, transactionhash character(66), logindex integer, blocknumber bigint);
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            content: `You are a program which translates natural language into read-only SQL commands. Use the following table schema: ${schema}. You only output SQL queries. Your queries are designed to be used as timeseries charts from Apache Superset. Trading pairs are in the form "<base>.<quote>", where <base> and <quote> are uppercase. Exchanges "binance" and "coinbase" use the trades_l3 table for their trades, all other exchanges use the trades table. All exchange names are lowercase. Input:`,
+            content: `You are a program which translates natural language into read-only SQL commands. Use the following table schema: ${schema}. You only output SQL queries. Transaction are linked to blocks  Trading pairs are in the form "<base>.<quote>", where <base> and <quote> are uppercase. Exchanges "binance" and "coinbase" use the trades_l3 table for their trades, all other exchanges use the trades table. All exchange names are lowercase. Input:`,
           },
           {
             role: "user",

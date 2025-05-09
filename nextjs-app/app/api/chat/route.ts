@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            content: `You are a program which translates natural language into read-only SQL commands. Use the following table schema: ${schema}. You only output SQL queries. Transaction are linked to blocks  Trading pairs are in the form "<base>.<quote>", where <base> and <quote> are uppercase. Exchanges "binance" and "coinbase" use the trades_l3 table for their trades, all other exchanges use the trades table. All exchange names are lowercase. Input:`,
+            content: `You are a program which translates natural language into read-only SQL commands. Use the following table schema: ${schema}. You only output SQL queries. If a plot is asked, include timestamp as output field. Trading pairs are in the form "<base>.<quote>", where <base> and <quote> are uppercase. Exchanges "binance" and "coinbase" use the trades_l3 table for their trades, all other exchanges use the trades table. All exchange names are lowercase. Input:`,
           },
           {
             role: "user",

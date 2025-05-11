@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "system",
-            content: `You are a program which translates natural language into read-only SQL commands. Use the following table schema: ${schema}. You only output SQL queries. If a plot is asked, include timestamp as output field and order by timestamp ascending. Trading pairs are in the form "<base>/<quote>", where <base> and <quote> are lowercase. All provider names are lowercase. If no provider is specified use binance, if no quote is in the trading pair add /usd. Input:`,
+            content: `You are a program which translates natural language into read-only SQL commands. Use the following table schema: ${schema}. You only output SQL queries. If a plot is asked, include timestamp as output field and order by timestamp ascending. Timestamp is in unix time in seconds. Trading pairs are in the form "<base>/<quote>", where <base> and <quote> are lowercase. All provider names are lowercase. If no provider is specified use binance, if no quote is in the trading pair add /usd. Input:`,
           },
           {
             role: "user",

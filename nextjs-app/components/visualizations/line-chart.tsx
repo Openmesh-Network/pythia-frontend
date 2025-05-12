@@ -67,6 +67,8 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
         margin={{
           left: 12,
           right: 12,
+          top: 5,
+          bottom: 5,
         }}
       >
         <CartesianGrid vertical={false} />
@@ -78,7 +80,7 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
           tickFormatter={(value) => value}
         />
         <YAxis
-          domain={domain}
+          domain={["dataMin", "dataMax"]}
           tickFormatter={(value) => {
             const num = parseFloat(value);
             if (num < 10) {

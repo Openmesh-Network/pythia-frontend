@@ -42,6 +42,23 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
       }, {} as { [field: string]: { label: ReactNode; color: string } });
   }, [data]);
 
+  const domain = useMemo(() => {
+    return data.reduce(
+      (prev, cur) => {
+        const values = Object.keys(cur)
+          .filter((k) => k !== "timestamp")
+          .map((k) => parseFloat(cur[k]));
+        return [
+          values.reduce((prev, cur) => Math.min(prev, cur), prev[0]),
+          values.reduce((prev, cur) => Math.max(prev, cur), prev[1]),
+        ];
+      },
+      [-Infinity, Infinity]
+    ) as [number, number];
+  }, [data]);
+
+  console.log(domain);
+
   return (
     <ChartContainer className="max-w-[1000px]" config={chartConfig}>
       <LineChartInternal
@@ -61,7 +78,7 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
           tickFormatter={(value) => value}
         />
         <YAxis
-          domain={["dataMin - 1", "dataMax + 1"]}
+          domain={domain}
           tickFormatter={(value) => {
             const num = parseFloat(value);
             if (num < 10) {

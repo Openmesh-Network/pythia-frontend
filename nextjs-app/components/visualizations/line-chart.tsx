@@ -60,7 +60,16 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
           tickMargin={8}
           tickFormatter={(value) => value}
         />
-        <YAxis domain={["dataMin - 1", "dataMax + 1"]} />
+        <YAxis
+          domain={["dataMin - 1", "dataMax + 1"]}
+          tickFormatter={(value) => {
+            const num = parseFloat(value);
+            if (num < 10) {
+              return num.toPrecision(3);
+            }
+            return num.toFixed(0);
+          }}
+        />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel={true} />}
@@ -68,7 +77,7 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
         {Object.keys(chartConfig).map((f) => (
           <Line
             dataKey={f}
-            type="natural"
+            type="linear"
             stroke={`var(--color-${f})`}
             strokeWidth={2}
             dot={false}

@@ -5,6 +5,7 @@ import {
   Line,
   LineChart as LineChartInternal,
   XAxis,
+  YAxis,
 } from "recharts";
 import {
   ChartContainer,
@@ -59,6 +60,7 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
           tickMargin={8}
           tickFormatter={(value) => value}
         />
+        <YAxis domain={["dataMin - 1", "dataMax + 1"]} />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel={true} />}
@@ -66,7 +68,7 @@ export function LineChart({ data }: { data: { [field: string]: any }[] }) {
         {Object.keys(chartConfig).map((f) => (
           <Line
             dataKey={f}
-            type="monotone"
+            type="natural"
             stroke={`var(--color-${f})`}
             strokeWidth={2}
             dot={false}
